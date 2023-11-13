@@ -53,6 +53,7 @@ pub struct RapydPaymentsRequest {
     pub description: Option<String>,
     pub complete_payment_url: Option<String>,
     pub error_payment_url: Option<String>,
+    pub merchant_reference_id: Option<String>,
 }
 
 #[derive(Default, Debug, Serialize)]
@@ -173,6 +174,7 @@ impl TryFrom<&RapydRouterData<&types::PaymentsAuthorizeRouterData>> for RapydPay
             description: None,
             error_payment_url: Some(return_url.clone()),
             complete_payment_url: Some(return_url),
+            merchant_reference_id: item.connector_request_reference_id.clone(),
         })
     }
 }
@@ -281,7 +283,7 @@ pub struct ResponseData {
     pub currency_code: Option<enums::Currency>,
     pub country_code: Option<String>,
     pub captured: Option<bool>,
-    pub transaction_id: String,
+    pub merchant_reference_id: String,
     pub paid: Option<bool>,
     pub failure_code: Option<String>,
     pub failure_message: Option<String>,
@@ -301,7 +303,7 @@ pub struct DisputeResponseData {
     pub created_at: Option<PrimitiveDateTime>,
     #[serde(default, with = "common_utils::custom_serde::timestamp::option")]
     pub updated_at: Option<PrimitiveDateTime>,
-    pub original_transaction_id: String,
+    pub merchant_reference_id: Option<String>,
 }
 
 #[derive(Default, Debug, Serialize)]
@@ -309,6 +311,7 @@ pub struct RapydRefundRequest {
     pub payment: String,
     pub amount: Option<i64>,
     pub currency: Option<enums::Currency>,
+    pub merchant_reference_id: Option<String>,
 }
 
 impl<F> TryFrom<&RapydRouterData<&types::RefundsRouterData<F>>> for RapydRefundRequest {
@@ -322,6 +325,7 @@ impl<F> TryFrom<&RapydRouterData<&types::RefundsRouterData<F>>> for RapydRefundR
                 .to_string(),
             amount: Some(item.amount),
             currency: Some(item.router_data.request.currency),
+            merchant_reference_id: item.connector_request_reference_id.clone(),
         })
     }
 }
@@ -362,6 +366,7 @@ pub struct RefundResponseData {
     pub status: RefundStatus,
     pub created_at: Option<i64>,
     pub failure_reason: Option<String>,
+    pub merchant_reference_id: Option<String>,
 }
 
 impl TryFrom<types::RefundsResponseRouterData<api::Execute, RefundResponse>>
@@ -520,6 +525,7 @@ pub struct RapydIncomingWebhook {
     pub trigger_operation_id: Option<String>,
     pub status: String,
     pub created_at: i64,
+    pub merchant_reference_id: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
