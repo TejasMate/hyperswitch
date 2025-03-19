@@ -1,5 +1,3 @@
-pm.environment.set("random_number", _.random(100, 100000));
-
 // Validate status 2xx
 pm.test("[POST]::/payments - Status code is 2xx", function () {
   pm.response.to.be.success;
@@ -65,9 +63,9 @@ if (jsonData?.client_secret) {
 // Response body should have value "requires_capture" for "status"
 if (jsonData?.status) {
   pm.test(
-    "[POST]::/payments - Content check if value for 'status' matches 'processing'",
+    "[POST]::/payments - Content check if value for 'status' matches 'requires_capture'",
     function () {
-      pm.expect(jsonData.status).to.eql("processing");
+      pm.expect(jsonData.status).to.eql("requires_capture");
     },
   );
 }

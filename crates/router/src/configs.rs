@@ -1,7 +1,8 @@
-#[cfg(feature = "aws_kms")]
-pub mod aws_kms;
-mod defaults;
-#[cfg(feature = "hashicorp-vault")]
-pub mod hc_vault;
+use hyperswitch_interfaces::secrets_interface::secret_state::RawSecret;
+
+pub(crate) mod defaults;
+pub mod secrets_transformers;
 pub mod settings;
 mod validations;
+
+pub type Settings = settings::Settings<RawSecret>;
